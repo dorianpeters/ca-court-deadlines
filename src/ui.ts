@@ -53,6 +53,9 @@ function renderDeadlines(): void {
   const diffs = parseDifferentials(customInput.value);
   const results: Deadline[] = calculateDeadlines(lastTrialDate, diffs, useCourtDays, holidaySet);
 
+  deadlinesContainer.classList.toggle('court-mode', useCourtDays);
+  deadlinesContainer.classList.toggle('calendar-mode', !useCourtDays);
+  
   deadlinesContainer.innerHTML = results
     .map(r => `<h3>${r.description} <span class="deadlines">${dateFormatter.format(r.date)}</span></h3>`)
     .join('\n');

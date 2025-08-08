@@ -46,6 +46,16 @@ p {
 /* Span styling for deadlines */
 .deadlines {
   font-weight: bold;
+  transition: color 0.3s ease;
+}
+
+/* Green for court days */
+.court-mode .deadlines {
+  color: #4CAF50;
+}
+
+/* Blue for calendar days */
+.calendar-mode .deadlines {
   color: #007BFF;
 }
 
