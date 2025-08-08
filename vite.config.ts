@@ -10,9 +10,5 @@ export default defineConfig({
         chunkFileNames: '[name].min.js',
       },
     },
-  },
-  test: {
-    globals: true,
-    environment: 'node',
-  },
+  }
 });
