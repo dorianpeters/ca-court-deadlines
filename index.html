@@ -26,6 +26,33 @@
     <h3>Enter days from the selected day</h3>
     <input type="text" id="customDeadlines" placeholder="e.g., -45, -30, -7, 15, 30" />
     <button id="updateCustomDeadlines">Update Deadlines</button>
+    
+    <div class="instructions-container">
+      <a href="#" id="toggleInstructions">Show Instructions</a>
+      <div id="instructionsContent" style="display: none;">
+        <h3>How to Use the Calculator</h3>
+        <ol>
+          <li>
+            <strong>Select a Starting Date:</strong> Click the date input box to bring
+            up a calendar and pick your key event date.
+          </li>
+          <li>
+            <strong>Choose Calculation Mode:</strong> Use the toggle switch to
+            choose between 'Calendar Days' (includes all days and adjusts the
+            final date) or 'Court Days' (skips weekends and holidays entirely).
+          </li>
+          <li>
+            <strong>View Deadlines:</strong> Default deadlines appear automatically
+            once a date is selected.
+          </li>
+          <li>
+            <strong>Calculate Custom Deadlines:</strong> For specific timeframes,
+            enter numbers in the text box (e.g., -90, 60), then click
+            'Update Deadlines'.
+          </li>
+        </ol>
+      </div>
+    </div>
 
     <script type="module" src="src/ui.ts"></script>
   </body>

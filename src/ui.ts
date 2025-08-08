@@ -10,6 +10,8 @@ const toggle = document.getElementById('calculationModeToggle') as HTMLInputElem
 const deadlinesContainer = document.getElementById('deadlinesContainer') as HTMLDivElement;
 const customInput = document.getElementById('customDeadlines') as HTMLInputElement;
 const updateButton = document.getElementById('updateCustomDeadlines') as HTMLButtonElement;
+const toggleInstructions = document.getElementById('toggleInstructions') as HTMLAnchorElement;
+const instructionsContent = document.getElementById('instructionsContent') as HTMLDivElement;
 
 let lastTrialDate: Date = new Date();
 let useCourtDays: boolean = toggle.checked;
@@ -62,6 +64,20 @@ function renderDeadlines(): void {
 }
 
 updateButton.addEventListener('click', (): void => renderDeadlines());
+
+toggleInstructions.addEventListener('click', (event): void => {
+  // Prevent the link from navigating
+  event.preventDefault(); 
+  
+  const isHidden = instructionsContent.style.display === 'none';
+  if (isHidden) {
+    instructionsContent.style.display = 'block';
+    toggleInstructions.textContent = 'Hide Instructions';
+  } else {
+    instructionsContent.style.display = 'none';
+    toggleInstructions.textContent = 'Show Instructions';
+  }
+});
 
 // Initial render
 renderDeadlines();

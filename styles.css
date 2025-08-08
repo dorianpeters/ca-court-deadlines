@@ -194,3 +194,44 @@ input:checked ~ .toggle-label-right {
 input:not(:checked) ~ .toggle-label-left {
     color: #007BFF; /* Highlight Calendar Days when not checked */
 }
+
+/* Instruction CSS */
+.instructions-container {
+  max-width: 800px; /* Match your other content width */
+  margin: 30px auto;
+  text-align: center;
+}
+
+#toggleInstructions {
+  cursor: pointer;
+  color: #007BFF;
+  font-weight: bold;
+  text-decoration: none;
+}
+#toggleInstructions:hover {
+  text-decoration: underline;
+}
+
+#instructionsContent {
+  margin-top: 15px;
+  padding: 20px;
+  border: 1px solid #e0e0e0;
+  border-radius: 4px;
+  background-color: #ffffff;
+  text-align: left;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+#instructionsContent h3 {
+  margin-top: 0;
+  color: #444;
+}
+
+#instructionsContent ol {
+  padding-left: 20px;
+  margin-bottom: 0;
+}
+
+#instructionsContent li {
+  margin-bottom: 10px;
+}
