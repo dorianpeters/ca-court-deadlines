@@ -1,6 +1,7 @@
-export default {
+import { defineConfig } from 'vite';
+
+export default defineConfig({
   base: '/ca-court-deadlines/',
-  minify: true,
   build: {
     rollupOptions: {
       output: {
@@ -9,5 +10,5 @@ export default {
         chunkFileNames: '[name].min.js',
       },
     },
-  }
-}
+  },
+});

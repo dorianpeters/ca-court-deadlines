@@ -1,4 +1,4 @@
-export const holidaySet = new Set([
+export const holidaySet: Set<string> = new Set([
   // 2025 Holidays
   "2025-01-01", // New Year's Day
   "2025-01-20", // Martin Luther King Jr. Day
