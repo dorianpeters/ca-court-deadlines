@@ -1,7 +1,7 @@
 import { defineConfig } from 'vite';
 
 export default defineConfig({
-  base: '/ca-court-deadlines/',
+  base: '/',
   build: {
     rollupOptions: {
       output: {

@@ -21,7 +21,7 @@
   "bugs": {
     "url": "https://github.com/dorianpeters/ca-court-deadlines/issues"
   },
-  "homepage": "https://github.com/dorianpeters/ca-court-deadlines",
+  "homepage": "https://cacourtdeadlines.com",
   "dependencies": {
     "date-fns": "^4.1.0",
     "flatpickr": "^4.6.13"
