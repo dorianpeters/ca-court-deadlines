@@ -1,38 +1,32 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <link rel="stylesheet" href="styles.css">
+    <title>CA Court Deadlines</title>
+  </head>
+  <body>
+    <h1>CA Court Deadlines</h1>
 
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link rel="icon" type="image/png" href="favicon.ico">
-  <link rel="stylesheet" href="styles.css">
-  <script src="script.js" type="module"></script>
-  <title>CA Court Deadlines</title>
-</head>
+    <h3>Select a starting date:</h3>
+    <input type="text" id="dateInput" placeholder="Select a date" />
 
-<body>
-  <h1>CA Court Deadlines</h1>
+    <div class="toggle-switch-container">
+      <span class="toggle-label-left">Calendar Days</span>
+      <label class="toggle-switch">
+        <input type="checkbox" id="calculationModeToggle">
+        <span class="slider round"></span>
+      </label>
+      <span class="toggle-label-right">Court Days</span>
+    </div>
 
-  <h3>Select a starting date:</h3>
-  <input type="text" id="dateInput" placeholder="Select a date" />
+    <div id="deadlinesContainer"></div>
 
-  <!-- Toggle for calculation mode -->
-  <div class="toggle-switch-container">
-    <span class="toggle-label-left">Calendar Days</span>
-    <label class="toggle-switch">
-      <input type="checkbox" id="calculationModeToggle">
-      <span class="slider round"></span>
-    </label>
-    <span class="toggle-label-right">Court Days</span>
-  </div>
+    <h3>Enter days from the selected day</h3>
+    <input type="text" id="customDeadlines" placeholder="e.g., -45, -30, -7, 15, 30" />
+    <button id="updateCustomDeadlines">Update Deadlines</button>
 
-  <!-- Container where deadlines will be displayed -->
-  <div id="deadlinesContainer"></div>
-
-  <!-- Custom deadline input -->
-  <h3>Enter days from the selected day</h3>
-  <input type="text" id="customDeadlines" placeholder="e.g., -45, -30, -7, 15, 30" />
-  <button id="updateCustomDeadlines">Update Deadlines</button>
-</body>
-
+    <script type="module" src="src/ui.js"></script>
+  </body>
 </html>
