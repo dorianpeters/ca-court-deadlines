@@ -1,4 +1,4 @@
-import { addDays, isCourtDay } from './dateUtils.js';
+import { addDays, isCourtDay, toLocalIso } from './dateUtils.js';
 
 export interface Deadline {
   diff: number;
@@ -8,17 +8,27 @@ export interface Deadline {
 }
 
 /** Generate the description text for a given deadline diff */
-export function formatDescription(diff: number, useCourtDays: boolean): string {
+export function formatDescription(
+  diff: number,
+  useCourtDays: boolean,
+  originalDate: Date,
+  finalDate: Date
+): string {
+  const adjusted = toLocalIso(originalDate) !== toLocalIso(finalDate);
+
   if (diff === 0) {
-    return useCourtDays 
-      ? 'Selected date (adjusted to court day):' 
-      : 'Selected date:';
+    if (adjusted) {
+      return 'Selected date (adjusted to court day):';
+    }
+    return 'Selected date:';
   }
-  if (diff > 0) {
-    return `${diff} ${useCourtDays ? 'court' : 'calendar'} days after the selected date:`;
-  }
-  return `${Math.abs(diff)} ${useCourtDays ? 'court' : 'calendar'} days before the selected date:`;
+
+  const direction = diff > 0 ? 'after' : 'before';
+  const type = useCourtDays ? 'court' : 'calendar';
+  return `${Math.abs(diff)} ${type} days ${direction} the selected date:`;
 }
+
+
 
 /** Calculate deadlines given a start date and list of differentials */
 export function calculateDeadlines(
@@ -32,7 +42,7 @@ export function calculateDeadlines(
     return {
       diff,
       date,
-      description: formatDescription(diff, useCourtDays),
+      description: formatDescription(diff, useCourtDays, startDate, date),
       isCourtDay: isCourtDay(date, holidays)
     };
   });
