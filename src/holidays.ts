@@ -50,7 +50,7 @@ export const holidaySet: Set<string> = new Set([
 
   // 2028 Holidays
   "2028-01-17", // Martin Luther King Jr. Day
-  "2028-02-12", // Lincoln's Birthday
+  "2028-02-11", // Lincoln's Birthday
   "2028-02-21", // Presidents' Day
   "2028-03-31", // Cesar Chavez Day
   "2028-05-29", // Memorial Day
