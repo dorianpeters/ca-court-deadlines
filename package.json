@@ -6,9 +6,8 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "vite build && cp CNAME dist/",
+    "build": "vite build",
     "preview": "vite preview",
-    "gh-pages": "gh-pages -d dist",
     "test": "vitest",
     "test:ui": "vitest --ui"
   },
