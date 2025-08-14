@@ -1,4 +1,4 @@
-import { addDays, isCourtDay, toLocalIso } from './dateUtils.js';
+import { addDays, isCourtDay, toLocalIso } from './dateUtils.ts';
 
 export interface Deadline {
   diff: number;

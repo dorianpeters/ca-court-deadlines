@@ -1,15 +1,16 @@
 import { describe, it, expect } from 'vitest';
-import { calculateDeadlines, formatDescription } from '../src/deadlineCalculator.js';
-import { toLocalIso } from '../src/dateUtils.js';
+import { calculateDeadlines, formatDescription } from '../src/deadlineCalculator.ts';
+import { toLocalIso } from '../src/dateUtils.ts';
 
 const holidays = new Set(['2025-01-01']);
 
 describe('deadlineCalculator', () => {
   it('formats description correctly', () => {
-    expect(formatDescription(0, true)).toContain('court day');
-    expect(formatDescription(0, false)).toContain('Selected date');
-    expect(formatDescription(5, true)).toContain('court days after');
-    expect(formatDescription(-3, false)).toContain('calendar days before');
+    const dummyDate = new Date(2025, 0, 2);
+    expect(formatDescription(0, true, dummyDate, dummyDate)).toContain('court day');
+    expect(formatDescription(0, false, dummyDate, dummyDate)).toContain('Selected date');
+    expect(formatDescription(5, true, dummyDate, dummyDate)).toContain('court days after');
+    expect(formatDescription(-3, false, dummyDate, dummyDate)).toContain('calendar days before');
   });
 
   it('calculates deadlines with court days', () => {

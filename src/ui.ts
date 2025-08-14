@@ -1,8 +1,8 @@
 import flatpickr from 'flatpickr';
 import 'flatpickr/dist/flatpickr.min.css';
-import { holidaySet } from './holidays.js';
-import { calculateDeadlines } from './deadlineCalculator.js';
-import type { Deadline } from './deadlineCalculator.js';
+import { holidaySet } from './holidays.ts';
+import { calculateDeadlines } from './deadlineCalculator.ts';
+import type { Deadline } from './deadlineCalculator.ts';
 
 // Grab DOM elements with explicit types
 const dateInput = document.getElementById('dateInput') as HTMLInputElement;

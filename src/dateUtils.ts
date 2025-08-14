@@ -4,7 +4,7 @@ import {
   isSaturday, 
   isSunday 
 } from 'date-fns';
-import { holidaySet } from './holidays.js';
+import { holidaySet } from './holidays.ts';
 
 /** Format a Date as `YYYY-MM-DD` in local time */
 export function toLocalIso(date: Date): string {

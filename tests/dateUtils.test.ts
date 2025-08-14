@@ -6,7 +6,7 @@ import {
   adjustForwardToCourtDay,
   addCourtDays,
   addDays
-} from '../src/dateUtils.js';
+} from '../src/dateUtils.ts';
 
 const holidays = new Set(['2025-01-01']); // Example: New Year’s Day
 
