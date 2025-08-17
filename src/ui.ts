@@ -1,8 +1,7 @@
 import flatpickr from 'flatpickr';
 import 'flatpickr/dist/flatpickr.min.css';
 import { holidaySet } from './holidays.ts';
-import { calculateDeadlines } from './deadlineCalculator.ts';
-import type { Deadline } from './deadlineCalculator.ts';
+import { calculateDeadlines, Deadline } from './deadlineCalculator.ts';
 
 // Grab DOM elements with explicit types
 const dateInput = document.getElementById('dateInput') as HTMLInputElement;
@@ -76,7 +75,7 @@ function renderDeadlines(): void {
     return;
   }
 
-  const results: Deadline[] = calculateDeadlines(lastTrialDate, diffs, useCourtDays, holidaySet);
+  const results: Deadline[] = calculateDeadlines(lastTrialDate, diffs ?? [], useCourtDays, holidaySet);
 
   deadlinesContainer.classList.toggle('court-mode', useCourtDays);
   deadlinesContainer.classList.toggle('calendar-mode', !useCourtDays);
