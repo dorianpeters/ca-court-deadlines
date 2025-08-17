@@ -33,7 +33,7 @@ export function formatDescription(
 /** Calculate deadlines given a start date and list of differentials */
 export function calculateDeadlines(
   startDate: Date,
-  differentials: number[] = [-45, -30, -7, 0, 15, 30],
+  differentials: number[],
   useCourtDays = false,
   holidays?: Set<string>
 ): Deadline[] {
