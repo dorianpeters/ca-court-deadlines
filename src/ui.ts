@@ -20,7 +20,7 @@ const dateFormatter = new Intl.DateTimeFormat('en-US', {
   weekday: 'long', 
   month: 'long', 
   day: 'numeric', 
-  year: 'numeric' 
+  year: 'numeric'
 });
 
 // Initialize date picker with fully typed options
@@ -45,14 +45,37 @@ toggle.addEventListener('change', (): void => {
 function parseDifferentials(input: string): number[] | undefined {
   const trimmed = input.trim();
   if (!trimmed) return undefined;
-  return trimmed
-    .split(',')
-    .map(s => parseInt(s.trim(), 10))
-    .filter((n): n is number => !Number.isNaN(n));
+
+  // Split on commas or whitespace (one or more). This allows: "1,2 3, 4" etc.
+  const tokens = trimmed.split(/[\s,]+/).filter(Boolean);
+  // Limit the number of separate integer values to 250
+  if (tokens.length > 250) return undefined;
+  const results: number[] = [];
+
+  for (const t of tokens) {
+    // Accept only integer strings (no floats, no stray characters)
+    if (!/^[-+]?\d+$/.test(t)) return undefined;
+    const n = Number(t);
+    // Enforce bounds: must be within -1000..1000 inclusive
+    if (n < -1000 || n > 1000) return undefined;
+    results.push(n);
+  }
+
+  return results;
 }
 
 function renderDeadlines(): void {
   const diffs = parseDifferentials(customInput.value);
+
+  // If the user entered something but parsing failed, show an error and abort.
+  if (diffs === undefined && customInput.value.trim()) {
+    deadlinesContainer.classList.remove('court-mode', 'calendar-mode');
+    deadlinesContainer.innerHTML = `
+      <p class="error">Invalid input. Enter integers between -1000 and 1000, separated by spaces or commas (e.g. -45, -30  -7 0 15 30).</p>
+    `;
+    return;
+  }
+
   const results: Deadline[] = calculateDeadlines(lastTrialDate, diffs, useCourtDays, holidaySet);
 
   deadlinesContainer.classList.toggle('court-mode', useCourtDays);
