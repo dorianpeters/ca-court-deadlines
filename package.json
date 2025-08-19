@@ -2,7 +2,7 @@
   "name": "ca-court-deadlines",
   "version": "0.0.1",
   "description": "Calculates CA court deadlines",
-  "main": "script.js",
+  "main": "src/ui.ts",
   "type": "module",
   "scripts": {
     "dev": "vite",
