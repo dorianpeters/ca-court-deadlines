@@ -2,8 +2,10 @@
   "name": "ca-court-deadlines",
   "compatibility_date": "2026-02-12",
   "assets": {
-    "directory": "./dist"
+    "directory": "./dist",
+    "binding": "ASSETS"
   },
+  "main": "src/worker.ts",
   "observability": {
     "enabled": true
   }

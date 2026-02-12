@@ -1,7 +1,6 @@
 import flatpickr from 'flatpickr';
 import 'flatpickr/dist/flatpickr.min.css';
-import { holidaySet } from './holidays.ts';
-import { calculateDeadlines, Deadline } from './deadlineCalculator.ts';
+import { Deadline } from './deadlineCalculator.ts';
 
 // Grab DOM elements with explicit types
 const dateInput = document.getElementById('dateInput') as HTMLInputElement;
@@ -15,10 +14,10 @@ const instructionsContent = document.getElementById('instructionsContent') as HT
 let lastTrialDate: Date = new Date();
 let useCourtDays: boolean = toggle.checked;
 
-const dateFormatter = new Intl.DateTimeFormat('en-US', { 
-  weekday: 'long', 
-  month: 'long', 
-  day: 'numeric', 
+const dateFormatter = new Intl.DateTimeFormat('en-US', {
+  weekday: 'long',
+  month: 'long',
+  day: 'numeric',
   year: 'numeric'
 });
 
@@ -63,7 +62,7 @@ function parseDifferentials(input: string): number[] | undefined {
   return results;
 }
 
-function renderDeadlines(): void {
+async function renderDeadlines(): Promise<void> {
   const diffs = parseDifferentials(customInput.value);
 
   // If the user entered something but parsing failed, show an error and abort.
@@ -75,22 +74,40 @@ function renderDeadlines(): void {
     return;
   }
 
-  const results: Deadline[] = calculateDeadlines(lastTrialDate, diffs ?? [], useCourtDays, holidaySet);
+  try {
+    const response = await fetch('/api/calculate', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        startDate: lastTrialDate.toISOString(),
+        differentials: diffs ?? [],
+        useCourtDays
+      })
+    });
 
-  deadlinesContainer.classList.toggle('court-mode', useCourtDays);
-  deadlinesContainer.classList.toggle('calendar-mode', !useCourtDays);
-  
-  deadlinesContainer.innerHTML = results
-    .map(r => `<h3>${r.description} <span class="deadlines">${dateFormatter.format(r.date)}</span></h3>`)
-    .join('\n');
+    if (!response.ok) throw new Error('Network response was not ok');
+
+    const results: Deadline[] = await response.json();
+
+    deadlinesContainer.classList.toggle('court-mode', useCourtDays);
+    deadlinesContainer.classList.toggle('calendar-mode', !useCourtDays);
+
+    deadlinesContainer.innerHTML = results
+      .map(r => `<h3>${r.description} <span class="deadlines">${dateFormatter.format(new Date(r.date))}</span></h3>`)
+      .join('\n');
+
+  } catch (error) {
+    console.error('Error fetching deadlines:', error);
+    deadlinesContainer.innerHTML = `<p class="error">Error calculating deadlines. Please try again.</p>`;
+  }
 }
 
-updateButton.addEventListener('click', (): void => renderDeadlines());
+updateButton.addEventListener('click', (): void => { renderDeadlines(); });
 
 toggleInstructions.addEventListener('click', (event): void => {
   // Prevent the link from navigating
-  event.preventDefault(); 
-  
+  event.preventDefault();
+
   const isHidden = instructionsContent.style.display === 'none';
   if (isHidden) {
     instructionsContent.style.display = 'block';

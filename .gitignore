@@ -1,3 +1,28 @@
-dist/
+# Cloudflare Wrangler
+.wrangler/
+.dev.vars
+
+# Dependencies
 node_modules/
+
+# Build outputs
+dist/
+build/
+.cache/
+
+# Environment and secrets
+.env
+.env.local
+
+# Logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# AI
 repomix*
