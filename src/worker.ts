@@ -1,4 +1,4 @@
-
+import { Hono } from 'hono';
 import { calculateDeadlines } from './deadlineCalculator';
 import { holidaySet } from './holidays';
 
@@ -7,38 +7,32 @@ export interface Env {
   ASSETS: any; // Fetcher;
 }
 
-export default {
-  async fetch(request: Request, env: Env): Promise<Response> {
-    const url = new URL(request.url);
+const app = new Hono<{ Bindings: Env }>();
 
-    // Serve static assets for non-API requests
-    if (!url.pathname.startsWith('/api/')) {
-      return env.ASSETS.fetch(request);
+app.post('/api/calculate', async (c) => {
+  try {
+    const body = await c.req.json();
+    const startDate = new Date(body.startDate);
+    const differentials = body.differentials;
+    const useCourtDays = body.useCourtDays;
+
+    if (isNaN(startDate.getTime()) || !Array.isArray(differentials)) {
+      return c.text("Invalid input", 400);
     }
 
-    if (url.pathname === '/api/calculate' && request.method === 'POST') {
-      try {
-        const body = await request.json() as any;
-        const startDate = new Date(body.startDate);
-        const differentials = body.differentials;
-        const useCourtDays = body.useCourtDays;
+    const deadlines = calculateDeadlines(startDate, differentials, useCourtDays, holidaySet);
 
-        if (isNaN(startDate.getTime()) || !Array.isArray(differentials)) {
-          return new Response("Invalid input", { status: 400 });
-        }
-
-        const deadlines = calculateDeadlines(startDate, differentials, useCourtDays, holidaySet);
-
-        // serialize dates back to string so they can be JSON stringified safely if they aren't already
-        // (calculateDeadlines returns Date objects, JSON.stringify handles them as ISO strings automatically)
-        return new Response(JSON.stringify(deadlines), {
-          headers: { 'Content-Type': 'application/json' }
-        });
-      } catch (e) {
-        return new Response("Error processing request", { status: 500 });
-      }
-    }
-
-    return new Response("Not Found", { status: 404 });
+    // serialize dates back to string so they can be JSON stringified safely if they aren't already
+    // (calculateDeadlines returns Date objects, JSON.stringify handles them as ISO strings automatically)
+    return c.json(deadlines);
+  } catch (e) {
+    return c.text("Error processing request", 500);
   }
-};
+});
+
+// Fallback to static assets
+app.get('*', (c) => {
+  return c.env.ASSETS.fetch(c.req.raw);
+});
+
+export default app;
