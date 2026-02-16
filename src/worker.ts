@@ -12,7 +12,10 @@ const app = new Hono<{ Bindings: Env }>();
 app.post('/api/calculate', async (c) => {
   try {
     const body = await c.req.json();
-    const startDate = new Date(body.startDate);
+    // date-only string "YYYY-MM-DD" is parsed as UTC midnight.
+    // To be safe against any off-by-one errors, we treat it as noon UTC.
+    const dateStr = body.startDate.includes('T') ? body.startDate : `${body.startDate}T12:00:00Z`;
+    const startDate = new Date(dateStr);
     const differentials = body.differentials;
     const useCourtDays = body.useCourtDays;
 

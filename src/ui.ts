@@ -1,5 +1,6 @@
 import flatpickr from 'flatpickr';
 import 'flatpickr/dist/flatpickr.min.css';
+import { toLocalIso } from './dateUtils.ts';
 import { Deadline } from './deadlineCalculator.ts';
 
 // Grab DOM elements with explicit types
@@ -79,7 +80,7 @@ async function renderDeadlines(): Promise<void> {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
-        startDate: lastTrialDate.toISOString(),
+        startDate: toLocalIso(lastTrialDate),
         differentials: diffs ?? [],
         useCourtDays
       })
