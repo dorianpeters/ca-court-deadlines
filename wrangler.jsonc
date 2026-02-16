@@ -1,5 +1,5 @@
 {
-  "name": "ca-court-deadlines",
+  "name": "ca-court-deadlines-workers",
   "compatibility_date": "2026-02-12",
   "assets": {
     "directory": "./dist",
