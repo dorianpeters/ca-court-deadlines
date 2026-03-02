@@ -1,7 +1,5 @@
-import flatpickr from 'flatpickr';
-import 'flatpickr/dist/flatpickr.min.css';
 import { toLocalIso } from './dateUtils.ts';
-import { Deadline } from './deadlineCalculator.ts';
+import { formatDescription } from './deadlineCalculator.ts';
 
 // Grab DOM elements with explicit types
 const dateInput = document.getElementById('dateInput') as HTMLInputElement;
@@ -22,19 +20,17 @@ const dateFormatter = new Intl.DateTimeFormat('en-US', {
   year: 'numeric'
 });
 
-// Initialize date picker with fully typed options
-const fpOptions = {
-  dateFormat: 'l, F d, Y',
-  defaultDate: lastTrialDate,
-  onChange: (selectedDates: Date[]) => {
-    if (selectedDates[0]) {
-      lastTrialDate = selectedDates[0];
-      renderDeadlines();
-    }
-  }
-};
+// Initialize date picker to today
+dateInput.value = toLocalIso(lastTrialDate);
 
-flatpickr(dateInput, fpOptions);
+dateInput.addEventListener('change', (e: Event) => {
+  const target = e.target as HTMLInputElement;
+  if (target.value) {
+    // Note: The HTML native date picker returns 'YYYY-MM-DD'
+    // This parses as UTC midnight. We add T12:00:00Z to prevent off-by-one errors in timezone conversions
+    lastTrialDate = new Date(`${target.value}T12:00:00Z`);
+  }
+});
 
 toggle.addEventListener('change', (): void => {
   useCourtDays = toggle.checked;
@@ -75,27 +71,44 @@ async function renderDeadlines(): Promise<void> {
     return;
   }
 
+  // If parsing succeeded but resulted in an empty array, clear display and abort.
+  if (!diffs || diffs.length === 0) {
+    deadlinesContainer.innerHTML = '';
+    return;
+  }
+
   try {
     const response = await fetch('/api/calculate', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
         startDate: toLocalIso(lastTrialDate),
-        differentials: diffs ?? [],
+        differentials: diffs,
         useCourtDays
       })
     });
 
     if (!response.ok) throw new Error('Network response was not ok');
 
-    const results: Deadline[] = await response.json();
+    // The worker returns a minified array of [differential, date_iso_string]
+    const result: [number, string][] = await response.json();
 
     deadlinesContainer.classList.toggle('court-mode', useCourtDays);
     deadlinesContainer.classList.toggle('calendar-mode', !useCourtDays);
 
-    deadlinesContainer.innerHTML = results
-      .map(r => `<h3>${r.description} <span class="deadlines">${dateFormatter.format(new Date(r.date))}</span></h3>`)
-      .join('\n');
+    // Convert minimal dictionary mappings into rich HTML using formatDescription
+    const htmlRows = result.map(([diff, dateStr]) => {
+      // Construct Date objects safely in local time to pass to formatDescription
+      const startD = new Date(`${toLocalIso(lastTrialDate).substring(0, 10)}T12:00:00Z`); // Use the actual start date for description
+      const finalD = new Date(`${dateStr}T12:00:00Z`);
+
+      const desc = formatDescription(diff, useCourtDays, startD, finalD);
+      const formattedDate = dateFormatter.format(finalD);
+
+      return `<h3>${desc} <span class="deadlines">${formattedDate}</span></h3>`;
+    });
+
+    deadlinesContainer.innerHTML = htmlRows.join('\n');
 
   } catch (error) {
     console.error('Error fetching deadlines:', error);
@@ -119,5 +132,4 @@ toggleInstructions.addEventListener('click', (event): void => {
   }
 });
 
-// Initial render
-renderDeadlines();
+// Initial render not called. Wait for button click.

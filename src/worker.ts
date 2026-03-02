@@ -25,9 +25,17 @@ app.post('/api/calculate', async (c) => {
 
     const deadlines = calculateDeadlines(startDate, differentials, useCourtDays, holidaySet);
 
-    // serialize dates back to string so they can be JSON stringified safely if they aren't already
-    // (calculateDeadlines returns Date objects, JSON.stringify handles them as ISO strings automatically)
-    return c.json(deadlines);
+    // The UI expects a simple mapping dictionary of diff -> date string
+    const deadlineMap: Record<string, string> = {};
+
+    deadlines.forEach(d => {
+      // Only return the local ISO date portion like "2026-03-02" to save bandwidth
+      deadlineMap[d.diff.toString()] = d.date.toISOString().split('T')[0];
+    });
+
+    const minimalResponse: [number, string][] = Object.entries(deadlineMap).map(([k, v]) => [parseInt(k, 10), v]);
+
+    return c.json(minimalResponse);
   } catch (e) {
     return c.text("Error processing request", 500);
   }
